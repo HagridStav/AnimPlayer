@@ -22,20 +22,17 @@
 
 ### Установка
 1. Клонируйте репозиторий:
-```bash
-git clone https://github.com/ваш-пользователь/vertical-animation-player.git
-cd vertical-animation-player
-Установите зависимости:
+```git clone https://github.com/ваш-пользователь/vertical-animation-player.git
+cd vertical-animation-player```
 
-bash
-pip install -r requirements.txt
+2. Установите зависимости:
+```pip install -r requirements.txt```
+
 Использование
 Поместите HTML-анимации в папку static/animations/
 
 Запустите сервер:
-
-bash
-python app.py
+```python app.py```
 Откройте в браузере: http://localhost:5000
 
 HTTP API
