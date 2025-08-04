@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Плеер анимаций</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <iframe id="animationFrame"></iframe>
+
+    <script>
+        const animationFrame = document.getElementById('animationFrame');
+        let currentAnimation = '';
+        
+        // Функция для загрузки анимации
+        function loadAnimation(animationName) {
+            if (animationName) {
+                currentAnimation = animationName;
+                animationFrame.src = `/static/animations/${animationName}`;
+            }
+        }
+        
+        // Функция для получения текущей анимации
+        async function getCurrentAnimation() {
+            const response = await fetch('/current-animation');
+            const data = await response.json();
+            if (data.success && data.animation !== currentAnimation) {
+                loadAnimation(data.animation);
+            }
+            return data;
+        }
+        
+        // Функция для переключения на следующую анимацию
+        async function nextAnimation() {
+            const response = await fetch('/next');
+            const data = await response.json();
+            if (data.success) {
+                loadAnimation(data.animation);
+            }
+            return data;
+        }
+        
+        // Функция для переключения на предыдущую анимацию
+        async function previousAnimation() {
+            const response = await fetch('/previous');
+            const data = await response.json();
+            if (data.success) {
+                loadAnimation(data.animation);
+            }
+            return data;
+        }
+        
+        // Функция для установки конкретной анимации
+        async function setAnimation(animationName) {
+            const response = await fetch('/set-animation', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ animation: animationName })
+            });
+            const data = await response.json();
+            if (data.success) {
+                loadAnimation(data.animation);
+            }
+            return data;
+        }
+        
+        // Функция для получения списка анимаций
+        async function listAnimations() {
+            const response = await fetch('/list-animations');
+            return await response.json();
+        }
+        
+        // Проверка текущей анимации каждую секунду
+        setInterval(getCurrentAnimation, 1000);
+        
+        // Загрузка начальной анимации при старте
+        window.addEventListener('DOMContentLoaded', () => {
+            getCurrentAnimation();
+        });
+    </script>
+</body>
+</html>
